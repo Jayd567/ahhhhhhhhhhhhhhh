@@ -1,10 +1,14 @@
+using System.Collections.Generic;
+using Unity.Collections;
+using Unity.Entities;
+using Unity.Mathematics;
 using UnityEngine;
-using ColonySim.Simulation.Generation;
 using ColonySim.Data;
+using ColonySim.Simulation.Generation;
 using ColonySim.Simulation.Grid;
 using ColonySim.Simulation.Jobs;
-using ColonySim.Simulation.Pathing;
 using ColonySim.Simulation.Pawns;
+using ColonySim.Simulation.Resources;
 using ColonySim.Simulation.Ticking;
 
 namespace ColonySim.Presentation
@@ -12,8 +16,6 @@ namespace ColonySim.Presentation
     public class SimulationRoot : MonoBehaviour
     {
         public WorldGenerationSettingsSO worldSettings;
-        public float[,] Heightmap { get; private set; }
-        public int SpawnCell { get; private set; }
         public int mapWidth = 256;
         public int mapHeight = 256;
         public TerrainDefSO floorDef;
@@ -24,100 +26,94 @@ namespace ColonySim.Presentation
         public float ticksPerSecond = 20f;
         public int staggerBucketCount = 5;
 
-        public WorldGrid Grid { get; private set; }
-        public PawnManager PawnManager { get; private set; }
-        public JobBoard JobBoard { get; private set; }
+        public World World { get; private set; }
+        public Entity GridEntity { get; private set; }
+        public int SpawnCell { get; private set; }
 
-        private TickManager _tickManager;
-        private TerrainJobConfig _floorConfig;
-        private TreeJobConfig _treeConfig;
+        private EntityManager _em;
         private float _tickAccumulator;
-        private readonly System.Collections.Generic.List<PawnView> _pawnViews = new System.Collections.Generic.List<PawnView>();
+        private readonly List<PawnView> _pawnViews = new List<PawnView>();
+        private readonly HashSet<int> _resourceItemIds = new HashSet<int>();
 
-        private readonly System.Collections.Generic.Dictionary<int, ColonySim.Simulation.Resources.ResourceItem> _resourceItems
-            = new System.Collections.Generic.Dictionary<int, ColonySim.Simulation.Resources.ResourceItem>();
-
-        public bool HasResourceItem(int id) => _resourceItems.ContainsKey(id);
-
-        public System.Action<ColonySim.Simulation.Resources.ResourceItem> OnResourceItemSpawned;
-
-        private readonly System.Collections.Generic.List<ColonySim.Simulation.Resources.ResourceItem> _pendingItems
-            = new System.Collections.Generic.List<ColonySim.Simulation.Resources.ResourceItem>();
+        public bool HasResourceItem(int id) => _resourceItemIds.Contains(id);
+        public System.Action<int, ResourceType, int, float, float> OnResourceItemSpawned;
 
         public void GenerateWorld()
         {
             if (worldSettings == null) throw new System.InvalidOperationException("Assign World Settings first.");
-            // The plain-C# WorldGenerator/GeneratedWorld were deleted in Task 4 of the ECS
-            // migration (world generation now runs as Burst jobs via EcsWorldGenerator, which
-            // writes into ECS grid components rather than the legacy WorldGrid used here).
-            // SimulationRoot's own migration to the ECS grid/pawn/job pipeline is Task 11 of
-            // the plan; until then this MonoBehaviour path is intentionally not wired up.
-            throw new System.NotSupportedException(
-                "SimulationRoot.GenerateWorld is pending migration to EcsWorldGenerator (ECS migration Task 11).");
+            World = World.DefaultGameObjectInjectionWorld;
+            _em = World.EntityManager;
+            GridEntity = GridBootstrap.CreateGrid(_em, mapWidth, mapHeight);
+            var generationSettings = worldSettings.CreateEcsSettings();
+            SpawnCell = EcsWorldGenerator.Generate(_em, GridEntity, generationSettings);
+
+            var blob = TerrainDefBlobBuilder.Build(new[] { worldSettings.Water, worldSettings.Dirt, worldSettings.Grass, worldSettings.Stone });
+            TerrainDefBlobBuilder.PopulateBaseCosts(_em, GridEntity, blob);
+            blob.Dispose();
         }
 
         private void Awake()
         {
             GenerateWorld();
-            _resourceItems.EnsureCapacity(Grid.CellCount);
-            _pendingItems.Capacity = Grid.CellCount;
-            PawnManager = new PawnManager();
+
+            Entity tickEntity = _em.CreateEntity(typeof(SimulationTick));
+            _em.SetComponentData(tickEntity, new SimulationTick { Value = 0, StaggerBucketCount = staggerBucketCount });
+
+            Entity configEntity = _em.CreateEntity(typeof(WorkDurationConfig));
+            _em.SetComponentData(configEntity, new WorkDurationConfig
+            {
+                MineDurationTicks = rockDef.WorkDurationTicks,
+                FloorTerrainTypeId = floorDef.TerrainTypeId,
+                MineYieldType = rockDef.YieldResourceType,
+                MineYieldAmount = rockDef.YieldAmount,
+                ChopDurationTicks = treeDef.WorkDurationTicks,
+                ChopYieldType = treeDef.YieldResourceType,
+                ChopYieldAmount = treeDef.YieldAmount,
+            });
+
+            DynamicBuffer<CellElement> cells = _em.GetBuffer<CellElement>(GridEntity);
+            GridDimensions dims = _em.GetComponentData<GridDimensions>(GridEntity);
             int spawnSearchStart = SpawnCell;
-            int spawnRegion = Grid.GetCell(SpawnCell).ConnectivityId;
+            var regionEntity = _em.CreateEntityQuery(typeof(RegionSingleton)).GetSingletonEntity();
+            DynamicBuffer<RegionElement> regions = _em.GetBuffer<RegionElement>(regionEntity);
+            int spawnRegion = regions[SpawnCell].RegionId;
+
             for (int i = 0; i < startingPawnCount; i++)
             {
                 int spawnCell = -1;
-                for (int offset = 0; offset < Grid.CellCount; offset++)
+                for (int offset = 0; offset < cells.Length; offset++)
                 {
-                    int candidate = (spawnSearchStart + offset) % Grid.CellCount;
-                    if (!Grid.GetCell(candidate).IsWalkable || Grid.GetCell(candidate).ConnectivityId != spawnRegion) continue;
+                    int candidate = (spawnSearchStart + offset) % cells.Length;
+                    if (!cells[candidate].Value.Walkable || regions[candidate].RegionId != spawnRegion) continue;
                     spawnCell = candidate;
                     spawnSearchStart = candidate + 1;
                     break;
                 }
                 if (spawnCell < 0) break;
-                Grid.TryGetCoordsOf(spawnCell, out int spawnX, out int spawnY);
-                int pawnId = PawnManager.SpawnPawn(spawnX, spawnY);
-                var pawnGo = new GameObject($"Pawn_{pawnId}");
-                pawnGo.transform.SetParent(transform);
 
+                int spawnX = spawnCell % dims.Width, spawnY = spawnCell / dims.Width;
+                Entity pawn = PawnFactory.CreatePawn(_em, i, new float2(spawnX, spawnY), i % staggerBucketCount);
+
+                var pawnGo = new GameObject($"Pawn_{i}");
+                pawnGo.transform.SetParent(transform);
                 var pawnView = pawnGo.AddComponent<PawnView>();
-                pawnView.Initialize(this, pawnId, colonistTemplate);
+                pawnView.Initialize(this, i, colonistTemplate);
                 _pawnViews.Add(pawnView);
             }
 
-            JobBoard = new JobBoard();
-            _tickManager = new TickManager(Grid, PawnManager, JobBoard, new GridAStar(), staggerBucketCount);
-
-            _floorConfig = new TerrainJobConfig
-            {
-                FloorTerrainTypeId = floorDef.TerrainTypeId,
-                YieldResourceType = rockDef.YieldResourceType,
-                YieldAmount = rockDef.YieldAmount,
-                WorkDurationTicks = rockDef.WorkDurationTicks,
-            };
-            _treeConfig = new TreeJobConfig
-            {
-                YieldResourceType = treeDef.YieldResourceType,
-                YieldAmount = treeDef.YieldAmount,
-                WorkDurationTicks = treeDef.WorkDurationTicks,
-            };
-
             OnResourceItemSpawned += SpawnResourceItemView;
             Camera camera = Camera.main;
-            if (camera != null) camera.transform.position = new Vector3(SpawnCell % Grid.Width + 0.5f, SpawnCell / Grid.Width + 0.5f, camera.transform.position.z);
+            if (camera != null) camera.transform.position = new Vector3(SpawnCell % dims.Width + 0.5f, SpawnCell / dims.Width + 0.5f, camera.transform.position.z);
         }
 
-        private void SpawnResourceItemView(ColonySim.Simulation.Resources.ResourceItem item)
+        private void SpawnResourceItemView(int id, ResourceType type, int amount, float x, float y)
         {
-            var itemGo = new GameObject($"ResourceItem_{item.Id}");
+            var itemGo = new GameObject($"ResourceItem_{id}");
             itemGo.transform.SetParent(transform);
             itemGo.AddComponent<SpriteRenderer>();
             var itemView = itemGo.AddComponent<ResourceItemView>();
-            Color color = item.Type == ColonySim.Simulation.Resources.ResourceType.Stone
-                ? rockDef.PlaceholderColor
-                : treeDef.PlaceholderColor;
-            itemView.Initialize(this, item.Id, item.PositionX, item.PositionY, color);
+            Color color = type == ResourceType.Stone ? rockDef.PlaceholderColor : treeDef.PlaceholderColor;
+            itemView.Initialize(this, id, x, y, color);
         }
 
         private void Update()
@@ -127,20 +123,24 @@ namespace ColonySim.Presentation
             while (_tickAccumulator >= tickInterval)
             {
                 _tickAccumulator -= tickInterval;
-                _tickManager.Tick(_floorConfig, _treeConfig);
-
-                foreach (var item in _tickManager.SpawnedItemsThisTick)
-                {
-                    _resourceItems[item.Id] = item;
-                    _pendingItems.Add(item);
-                }
+                World.GetExistingSystemManaged<SimulationTickGroup>().Update();
             }
         }
 
         private void LateUpdate()
         {
-            foreach (var item in _pendingItems) OnResourceItemSpawned?.Invoke(item);
-            _pendingItems.Clear();
+            EntityQuery pending = _em.CreateEntityQuery(typeof(ResourceItemData), typeof(PendingResourceSpawn));
+            using NativeArray<Entity> spawned = pending.ToEntityArray(Allocator.Temp);
+            GridDimensions dims = _em.GetComponentData<GridDimensions>(GridEntity);
+            foreach (Entity e in spawned)
+            {
+                ResourceItemData data = _em.GetComponentData<ResourceItemData>(e);
+                int id = e.Index;
+                _resourceItemIds.Add(id);
+                OnResourceItemSpawned?.Invoke(id, data.Type, data.Amount, data.CellIndex % dims.Width, data.CellIndex / dims.Width);
+                _em.RemoveComponent<PendingResourceSpawn>(e);
+            }
+
             for (int i = _pawnViews.Count - 1; i >= 0; i--)
                 if (_pawnViews[i] == null || !_pawnViews[i].SyncFromSimulation())
                     _pawnViews.RemoveAt(i);
@@ -148,18 +148,22 @@ namespace ColonySim.Presentation
 
         public bool TryDesignateMine(int cellIndex)
         {
-            if (Grid == null || JobBoard == null || (uint)cellIndex >= (uint)Grid.CellCount) return false;
-            Cell cell = Grid.GetCell(cellIndex);
-            if (!cell.HasRock) return false;
-            return JobBoard.TryAddJob(Grid, JobType.Mine, cellIndex, out _);
+            if (_em.Equals(default(EntityManager))) return false;
+            DynamicBuffer<CellElement> cells = _em.GetBuffer<CellElement>(GridEntity);
+            if ((uint)cellIndex >= (uint)cells.Length || !cells[cellIndex].Value.HasRock) return false;
+            return JobFactory.TryCreateJob(_em, GridEntity, JobType.Mine, cellIndex, out _);
         }
 
         public bool TryDesignateChop(int cellIndex)
         {
-            if (Grid == null || JobBoard == null || (uint)cellIndex >= (uint)Grid.CellCount) return false;
-            Cell cell = Grid.GetCell(cellIndex);
-            if (!cell.HasTree) return false;
-            return JobBoard.TryAddJob(Grid, JobType.ChopTree, cellIndex, out _);
+            DynamicBuffer<CellElement> cells = _em.GetBuffer<CellElement>(GridEntity);
+            if ((uint)cellIndex >= (uint)cells.Length) return false;
+            EntityQuery treeQuery = _em.CreateEntityQuery(typeof(TreeTag), typeof(TreeCellIndex));
+            using NativeArray<TreeCellIndex> trees = treeQuery.ToComponentDataArray<TreeCellIndex>(Allocator.Temp);
+            bool hasTree = false;
+            for (int i = 0; i < trees.Length; i++) if (trees[i].Value == cellIndex) { hasTree = true; break; }
+            if (!hasTree) return false;
+            return JobFactory.TryCreateJob(_em, GridEntity, JobType.ChopTree, cellIndex, out _);
         }
     }
 }
