@@ -1,10 +1,12 @@
 using Unity.Burst;
 using Unity.Collections;
 using Unity.Entities;
+using ColonySim.Simulation.Ticking;
 
 namespace ColonySim.Simulation.Grid
 {
     [BurstCompile]
+    [UpdateInGroup(typeof(SimulationTickGroup))]
     public partial struct ConnectivitySystem : ISystem
     {
         public void OnCreate(ref SystemState state)

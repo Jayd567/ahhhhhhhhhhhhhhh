@@ -10,9 +10,12 @@ produce a resource item. This is the foundation milestone described in
 
 ## Project layout
 
-- `Assets/Scripts/Simulation/` — plain C# simulation layer (grid, pawns,
-  jobs, pathing, ticking). No MonoBehaviour dependency; covered by EditMode
-  tests under `Assets/Tests/EditMode/`.
+- `Assets/Scripts/Simulation/` — ECS simulation layer (`com.unity.entities`
+  components, `ISystem`s, and Burst jobs for grid/region/tile-cost state,
+  pawns, jobs, flow-field pathfinding, world generation, and ticking). No
+  MonoBehaviour dependency; covered by EditMode tests under
+  `Assets/Tests/EditMode/` using the project's standard DOTS test-World
+  pattern (`World.CreateSystem<T>()`/`handle.Update(world.Unmanaged)`).
 - `Assets/Scripts/Data/` — ScriptableObject data definitions
   (`TerrainDefSO`, `PawnTemplateSO`, `TreeDefSO`).
 - `Assets/Scripts/Presentation/` — MonoBehaviours that render simulation
@@ -40,6 +43,35 @@ EditMode tests run via the Unity Test Runner (Window > General > Test
 Runner > EditMode), or headlessly via `unity test --mode EditMode`.
 
 ## Changelog
+
+- ECS/DOTS migration Tasks 12-14: rewrote the last three Presentation
+  consumers of the removed plain-C# simulation surface. `GridView.cs` now
+  reads `GridDimensions`/`GridRevision`/`CellElement` and `TreeTag`/
+  `TreeCellIndex` off `root.World`/`root.GridEntity` instead of the deleted
+  `WorldGrid`/`Cell`, and repaints its texture/tilemap on the same
+  revision-changed check as before. `PawnView.cs` looks up its pawn's
+  `LocalTransform` by `PawnId` via an `EntityQuery` against `root.World`
+  instead of the deleted `PawnManager`/`Pawn`. `DesignationInputController.cs`
+  reads `GridDimensions` off `root.World`/`root.GridEntity` instead of the
+  deleted `SimulationRoot.Grid`. Deleted `WorldGrid.cs`/`Cell.cs` (Task 12,
+  `GridView.cs` was their last consumer, per the migration plan's explicit
+  deferral) and `Assets/Tests/EditMode/WorldGridTests.cs`. Static checks
+  (duplicate-symbol grep across `Assets/Scripts`, and a cross-file grep for
+  `WorldGrid`/`Cell`/`Pawn`/`PawnManager`/`JobBoard`/`GridAStar`/
+  `IPathfinder`/`TickManager`) now show no lingering references anywhere in
+  the project — every task (1-14) of
+  `docs/superpowers/plans/2026-09-24-ecs-dots-migration.md` is implemented.
+  **Status:** unverified against the actual Unity Editor/Burst compiler —
+  no live Editor was reachable from this session, so this is static review
+  only (grep-level dangling-reference and duplicate-symbol checks, asmdef
+  reference checks), not a real compile or EditMode test run. Someone with
+  Editor access should run `unity test ... --mode EditMode` and confirm
+  Play mode (three colonists spawn, right-click mine/chop completes and
+  produces a resource item, water is rejected, duplicate designations are
+  rejected) before trusting this beyond "the source is internally
+  consistent by inspection."
+
+- ECS migration Tasks 4-11 cleanup and completion: deleted the superseded plain-C# files Tasks 4-6 had left in place alongside their ECS replacements — this coexistence was causing a real `WorldGenerationSettings` duplicate-definition (`CS0101`) compile error between `WorldGenerator.cs` and `EcsWorldGenerator.cs`. Deleted `Assets/Scripts/Simulation/Generation/SimplexNoise.cs`/`WorldGenerator.cs` and `Assets/Tests/EditMode/WorldGeneratorTests.cs` (Task 4), `Assets/Scripts/Simulation/Pawns/Pawn.cs`/`PawnManager.cs` and `Assets/Tests/EditMode/PawnManagerTests.cs` (Task 5), `Assets/Scripts/Simulation/Jobs/Job.cs` (Task 6). Completed Task 7 cleanup: deleted `Assets/Scripts/Simulation/Pathing/GridAStar.cs`/`IPathfinder.cs` and `Assets/Tests/EditMode/GridAStarTests.cs` (the `FlowFieldComponents.cs`/`FlowFieldGenerationSystem.cs`/`FlowFieldGenerationSystemTests.cs` implementation itself, including the region-boundary regression test, was already present and left unchanged). Added Task 8's `Assets/Scripts/Simulation/Jobs/JobAssignmentSystem.cs` (`ISystem` ranking unclaimed jobs for each idle pawn by flow-field integration cost within the pawn's connectivity region, writing `CurrentJob`/`AssignedFlowField`) and `Assets/Tests/EditMode/JobAssignmentSystemTests.cs`; deleted the now-fully-superseded `Assets/Scripts/Simulation/Jobs/JobBoard.cs`/`Assets/Tests/EditMode/JobBoardTests.cs`. Added Task 9's `Assets/Scripts/Simulation/Pawns/MovementSystem.cs` (steps a moving pawn along its `AssignedFlowField`'s `FlowDirectionElement` buffer; on arrival disables `IsMoving`, enables `IsWorking`, and sets `JobData.RemainingWork` from the `WorkDurationConfig` singleton) and `Assets/Tests/EditMode/MovementSystemTests.cs`. Added Task 10's `Assets/Scripts/Simulation/Resources/ResourceComponents.cs` (`ResourceItemData`, `PendingResourceSpawn`), `Assets/Scripts/Simulation/Ticking/WorkExecutionSystem.cs` (decrements `JobData.RemainingWork` for staggered `IsWorking` pawns; on completion mutates the grid — clears the mined rock or destroys the chopped `TreeTag` entity — bumps `GridRevision`, spawns a `PendingResourceSpawn` entity, destroys the job, and returns the pawn to idle; falls through to idle without spawning a duplicate resource if the target was already resolved out from under the pawn) and `Assets/Scripts/Simulation/Ticking/SimulationTickGroup.cs` (the `SimulationSystemGroup`-nested tick group that increments the `SimulationTick` singleton once per update); wired `[UpdateInGroup(typeof(SimulationTickGroup))]`/`[UpdateAfter(...)]` across `ConnectivitySystem` → `JobAssignmentSystem` → `MovementSystem` → `WorkExecutionSystem`; added `Assets/Tests/EditMode/WorkExecutionSystemTests.cs`; deleted `Assets/Scripts/Simulation/Ticking/TickManager.cs`/`Assets/Tests/EditMode/TickManagerTests.cs`. Completed Task 11: rewrote `Assets/Scripts/Presentation/SimulationRoot.cs` to bootstrap the ECS `World`/grid entity/terrain-cost blob/pawn entities/`SimulationTick`/`WorkDurationConfig` singletons directly and drive `SimulationTickGroup` each fixed tick, replacing its `WorldGrid`/`PawnManager`/`JobBoard`/`TickManager`-based bootstrap; `TryDesignateMine`/`TryDesignateChop`/`OnResourceItemSpawned` keep equivalent public signatures (the latter reshaped to a `(id, type, amount, x, y)` tuple since the plain `ResourceItem` class no longer exists). Renamed `WorldGenerationSettingsSO.CreateSettings()` to `CreateEcsSettings()` to match. **Status:** `Assets/Scripts/Presentation/GridView.cs`, `PawnView.cs`, and `DesignationInputController.cs` still read the `SimulationRoot.Grid`/`.PawnManager` surface this rewrite removed, so — per the plan's own documented interim states — the project does not fully compile again until Tasks 12-14 rewrite those three Presentation files; no live Unity Editor was available in this session, so none of this is verified against the actual Editor/Burst compiler, only by static inspection (duplicate-symbol grep, reference/asmdef check, cross-file usage grep for deleted types).
 
 - ECS migration Task 3: added `TileCostComponents.cs` (`TileCostSingleton`, `TileCost.Impassable`, `BaseCostElement`/`DynamicCostElement` buffers) under `Assets/Scripts/Simulation/Grid/`, and `TerrainDefBlob.cs` (`TerrainDefBlob`/`TerrainDefEntry` blob asset, `TerrainDefBlobBuilder.Build`/`PopulateBaseCosts`) under `Assets/Scripts/Data/`; `Data.asmdef` now references `Unity.Entities`/`Unity.Collections` with `allowUnsafeCode: true`. Reordered `PopulateBaseCosts` to perform all archetype-changing `AddBuffer`/`AddComponent` calls before fetching `DynamicBuffer` handles, avoiding an invalidated-safety-handle runtime error. Added `Assets/Tests/EditMode/TerrainDefBlobTests.cs`. Verified: 43/43 EditMode tests pass. Status: complete.
 

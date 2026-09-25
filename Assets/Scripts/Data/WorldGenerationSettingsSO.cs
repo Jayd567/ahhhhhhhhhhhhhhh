@@ -11,7 +11,7 @@ namespace ColonySim.Data
         public Sprite TreeSprite, RockSprite;
         [Min(0.1f)] public float TreeSize = 1.4f, RockSize = 0.85f;
 
-        public WorldGenerationSettings CreateSettings()
+        public WorldGenerationSettings CreateEcsSettings()
         {
             if (!Water || !Dirt || !Grass || !Stone)
                 throw new System.InvalidOperationException("Assign all four terrain definitions.");
