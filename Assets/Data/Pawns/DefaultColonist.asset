@@ -1,0 +1,75 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4c3a6cba120124045ae6a6b8776f87a2, type: 3}
+  m_Name: DefaultColonist
+  m_EditorClassIdentifier: Data::ColonySim.Data.PawnTemplateSO
+  DisplayName: Colonist
+  MoveSpeed: 2.5
+  WorkSpeedMultiplier: 1
+  PlaceholderColor: {r: 0.2, g: 0.7647059, b: 0.8392157, a: 1}
+  VisualScale: 1.3
+  Layers:
+  - Name: Waist
+    Sprite: {fileID: 21300000, guid: 6997e1c714d84f747830c507174a3e72, type: 3}
+    Offset: {x: 0, y: -0.18}
+    Scale: {x: 1, y: 1}
+    Tint: 2
+  - Name: Body
+    Sprite: {fileID: 21300000, guid: 2b7e0604198026740b71bcc3c0ba7dbc, type: 3}
+    Offset: {x: 0, y: -0.125}
+    Scale: {x: 1, y: 1}
+    Tint: 1
+  - Name: LeftFoot
+    Sprite: {fileID: 21300000, guid: f228a0e58dc1d0a4c826a6a075edd305, type: 3}
+    Offset: {x: -0.115, y: -0.445}
+    Scale: {x: 1, y: 1}
+    Tint: 2
+  - Name: RightFoot
+    Sprite: {fileID: 21300000, guid: f228a0e58dc1d0a4c826a6a075edd305, type: 3}
+    Offset: {x: 0.115, y: -0.445}
+    Scale: {x: 1, y: 1}
+    Tint: 2
+  - Name: LeftHand
+    Sprite: {fileID: 21300000, guid: 859674cdd0cd5074b89a448a18db1ab1, type: 3}
+    Offset: {x: -0.23, y: -0.16}
+    Scale: {x: 1, y: 1}
+    Tint: 0
+  - Name: RightHand
+    Sprite: {fileID: 21300000, guid: 859674cdd0cd5074b89a448a18db1ab1, type: 3}
+    Offset: {x: 0.23, y: -0.16}
+    Scale: {x: 1, y: 1}
+    Tint: 0
+  - Name: Head
+    Sprite: {fileID: 21300000, guid: f7032fdcfc335e04b9353f7a77e2d190, type: 3}
+    Offset: {x: 0, y: 0.305}
+    Scale: {x: 1, y: 1}
+    Tint: 0
+  - Name: LeftEye
+    Sprite: {fileID: 21300000, guid: ed349f1d2f93a3f488d2fa5824cffb04, type: 3}
+    Offset: {x: -0.055, y: 0.27}
+    Scale: {x: 1, y: 1}
+    Tint: 3
+  - Name: RightEye
+    Sprite: {fileID: 21300000, guid: ed349f1d2f93a3f488d2fa5824cffb04, type: 3}
+    Offset: {x: 0.055, y: 0.27}
+    Scale: {x: 1, y: 1}
+    Tint: 3
+  Palettes:
+  - Skin: {r: 0.93, g: 0.76, b: 0.59, a: 1}
+    Clothing: {r: 0.43, g: 0.58, b: 0.47, a: 1}
+    Trousers: {r: 0.29, g: 0.32, b: 0.3, a: 1}
+  - Skin: {r: 0.67, g: 0.44, b: 0.3, a: 1}
+    Clothing: {r: 0.42, g: 0.53, b: 0.66, a: 1}
+    Trousers: {r: 0.25, g: 0.28, b: 0.34, a: 1}
+  - Skin: {r: 0.83, g: 0.62, b: 0.44, a: 1}
+    Clothing: {r: 0.72, g: 0.46, b: 0.34, a: 1}
+    Trousers: {r: 0.32, g: 0.27, b: 0.24, a: 1}

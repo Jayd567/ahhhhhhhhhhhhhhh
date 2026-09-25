@@ -1,0 +1,5 @@
+Original, unmodified PNGs from Kenney Top-down Shooter (CC0).
+https://kenney.nl/assets/top-down-shooter
+Tree.png = PNG/Tiles/tile_183.png; Rock.png = PNG/Tiles/tile_239.png.
+Imported at 256 PPU, trilinear with mipmaps to match colonist art.
+World settings compensate for original sprite dimensions in cell units.

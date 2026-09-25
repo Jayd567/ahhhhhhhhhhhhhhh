@@ -1,0 +1,14 @@
+{
+    "name": "Presentation",
+    "rootNamespace": "ColonySim.Presentation",
+    "references": ["Simulation", "Data", "Unity.InputSystem"],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

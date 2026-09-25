@@ -1,0 +1,43 @@
+	Assets are 256px by 256px, but you might consider scaling down them by half
+because they were originally made and intended to be used at 128px by 128px. They
+were just exported at 256px because I found the image quality was much better that
+way, but if you prefer it at 256 then you can use them as such too. Up to you really.
+
+	These assets are made to be modular so you will have to build the character yourself.
+I provided multiple reference images so you have a guide, but that's only a suggestion.
+If you want your character to use the leg sprite as a hand then you can do that. Feel free
+to craft things to your personal liking.
+
+	The Assets come in just a white color, but you can easily change the color:
+Godot:
+	  In Godot simply select the sprite and under Visibility -> Modulate in the inspector tab
+	you can change the color. You can also use code to change the color as well.
+	This is great if you'd like to have some character customization in your game.
+Unity:
+	  Like Godot, simply go to your inspector tab -> sprite renderer -> color and then change
+	the color. You should also be able to change it through code as well.
+Other Engines:
+	  I haven't used any other engines, but I'm sure the same idea applies as in Godot and Unity.
+	Simply change the sprite's color in your engine, but if that isn't an option then use Inkscape or
+	Adobe Illustrator to change the color by editing the SVG files provided.
+
+License:
+CC0
+- No credit needed, but appreciated.
+- You can use it for commercial and non-commercial purposes alike.
+- You're free to adapt the work and share it
+(However, I would hope you would make it free for any devs like yourself to use ._.)
+
+Questions?
+- Comment on the asset's page
+- DM me on Twitter @DoubtItt
+
+Known Issues:
+- I've found that the image quality goes to shit after you zoom out.
+I don't know how to fix this, but if you know then let me know through
+the comments section on the asset page or through a Twitter DM @DoubtItt.
+
+Out Of Respect:
+- All I ask is that you don't take my work then upload it to other sites, and try to claim it as your own work.
+- That and I ask that you don't use my work in anything illegal or fucked up. Don't know
+how you'd use it in either, but if you think that you've found the way. Don't.

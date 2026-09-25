@@ -1,0 +1,1 @@
+{"name":"WorldGeneration.Editor","references":["Simulation","Data","Presentation"],"includePlatforms":["Editor"]}

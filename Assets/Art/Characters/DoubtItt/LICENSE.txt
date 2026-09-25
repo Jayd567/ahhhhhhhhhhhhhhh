@@ -1,0 +1,7 @@
+DoubtItt — Modular Test Dummy
+Source: https://doubtitt.itch.io/modular-test-dummy
+Downloaded: 2026-09-24
+License: CC0 1.0 Universal — https://creativecommons.org/publicdomain/zero/1.0/
+The creator permits commercial use and adaptation; attribution is appreciated, not required.
+Original PNG parts are unmodified. Unity composes and tints them at runtime.
+See Instructions.txt for the creator's original instructions and license statement.
