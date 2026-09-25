@@ -2,25 +2,28 @@
 
 ## System dependency map
 
-Simulation (Unity ECS: `com.unity.entities`/`burst`/`collections`, plus a
-few remaining plain-C# leftovers not yet migrated) <- Data (ScriptableObjects,
-partly ECS-blob-aware) <- Presentation (Unity MonoBehaviours).
+Simulation (Unity ECS: `com.unity.entities`/`burst`/`collections`) <- Data
+(ScriptableObjects, partly ECS-blob-aware) <- Presentation (Unity
+MonoBehaviours querying the ECS `World` directly, no adapter layer).
 WorldGeneration.Editor references those three assemblies and is Editor-only.
 SimulationTests references Simulation and Data and runs without a scene, using
 the project's standard ECS test pattern (`World.CreateSystem<T>()`/
 `handle.Update(world.Unmanaged)` against a scratch `World`).
 
-**Status:** Tasks 1-11 of `docs/superpowers/plans/2026-09-24-ecs-dots-migration.md`
-are implemented (grid/region/tile-cost singletons, Burst world generation,
+**Status:** All 14 code tasks of `docs/superpowers/plans/2026-09-24-ecs-dots-migration.md`
+are implemented — grid/region/tile-cost singletons, Burst world generation,
 pawn/job entities, flow-field pathfinding, job assignment, movement, work
-execution, and `SimulationRoot`'s ECS bootstrap). Tasks 12-14 (rewriting
-`GridView`, `PawnView`, `DesignationInputController` onto the new
-`SimulationRoot.World`/`GridEntity` surface) are **not** done yet — those
-three files still read the removed `SimulationRoot.Grid`/`.PawnManager`
-properties, so the project does not compile end-to-end until they land.
-`WorldGrid`/`Cell` (plain C#) are deliberately still present because
-`GridView` is their last consumer, per the migration plan's explicit
-deferral of their deletion to Task 12.
+execution, `SimulationRoot`'s ECS bootstrap, and the `GridView`/`PawnView`/
+`DesignationInputController` Presentation rewrite. The plain-C# `WorldGrid`/
+`Cell`/`Pawn`/`PawnManager`/`Job`/`JobBoard`/`GridAStar`/`IPathfinder`/
+`TickManager` classes this replaced are all deleted; a project-wide grep
+confirms no remaining references. **This has not been confirmed against an
+actual Unity Editor compile or EditMode test run** — no live Editor was
+reachable from the sessions that did this work, so correctness rests on
+static review (duplicate-symbol and dangling-reference greps, asmdef
+reference checks) rather than the Editor/Burst compiler or test runner
+actually agreeing. Treat it as unverified until someone with Editor access
+runs the EditMode suite and checks Play mode.
 
 ## Class relationships
 
@@ -81,12 +84,10 @@ deferral of their deletion to Task 12.
   members `ConnectivitySystem -> JobAssignmentSystem -> MovementSystem ->
   WorkExecutionSystem` via `[UpdateAfter]`.
 
-### Simulation (plain C#, not yet migrated)
+### Simulation (plain C#, intentionally kept)
 
-- `WorldGrid`/`Cell` — flattened-array grid still used by `GridView` only;
-  scheduled for deletion once `GridView` is rewritten onto `CellElement` (Task 12).
 - `JobType.cs`/`ResourceType.cs` — plain Burst-compatible enums, reused unchanged
-  by both the ECS and remaining plain-C# code.
+  by the ECS code (per the migration plan's Global Constraints — not replaced).
 
 ### Data
 
@@ -99,23 +100,27 @@ deferral of their deletion to Task 12.
   duration. `TreeDefSO` owns tree yields/duration. `Rock.asset` supplies mining
   rewards; `Stone.asset` represents walkable stone ground.
 
-### Presentation (partially broken pending Tasks 12-14)
+### Presentation
 
-- `SimulationRoot` (rewritten, Task 11) bootstraps the ECS `World` in `Awake`:
-  creates the grid entity, runs `EcsWorldGenerator.Generate`, builds/populates
-  the terrain-cost blob, creates the `SimulationTick`/`WorkDurationConfig`
-  singletons, spawns starting pawn entities + `PawnView`s in the spawn region,
-  and drives `SimulationTickGroup.Update()` on a fixed accumulator in `Update`.
+- `SimulationRoot` bootstraps the ECS `World` in `Awake`: creates the grid
+  entity, runs `EcsWorldGenerator.Generate`, builds/populates the terrain-cost
+  blob, creates the `SimulationTick`/`WorkDurationConfig` singletons, spawns
+  starting pawn entities + `PawnView`s in the spawn region, and drives
+  `SimulationTickGroup.Update()` on a fixed accumulator in `Update`.
   `LateUpdate` drains `PendingResourceSpawn` entities into `OnResourceItemSpawned`
-  and syncs pawn views. `TryDesignateMine`/`TryDesignateChop` now call
+  and syncs pawn views. `TryDesignateMine`/`TryDesignateChop` call
   `JobFactory.TryCreateJob` directly. Exposes `World`/`GridEntity` in place of
-  the removed `Grid`/`PawnManager`/`JobBoard` properties.
-- `GridView`, `PawnView`, `DesignationInputController` **still reference the
-  removed `SimulationRoot.Grid`/`.PawnManager` surface** (`WorldGrid`, `Pawn`)
-  and do not compile against the rewritten `SimulationRoot` — this is Tasks
-  12-14 of the migration plan, not yet done. `WorldGeneratorEditor` and
-  `CameraController`/`ResourceItemView` are unaffected (they don't touch the
-  removed surface).
+  the old `Grid`/`PawnManager`/`JobBoard` properties.
+- `GridView` queries `GridDimensions`/`GridRevision`/`CellElement` and
+  `TreeTag`/`TreeCellIndex` off `root.World`/`root.GridEntity` each frame
+  (repainting its texture/tilemap only when `GridRevision` changes, same as
+  before the migration).
+- `PawnView` holds only a stable `PawnId` and an `EntityQuery`; each sync it
+  looks up its pawn's current `LocalTransform` by matching `PawnId` in that
+  query against `root.World`, never holding an `Entity` handle directly.
+  `DesignationInputController` reads `GridDimensions` off `root.World`/
+  `root.GridEntity` to convert a click to a cell index. `WorldGeneratorEditor`,
+  `CameraController`, and `ResourceItemView` are unchanged by the migration.
 
 ## Data flow
 
@@ -126,8 +131,8 @@ deferral of their deletion to Task 12.
    `ticksPerSecond` interval; the group increments `SimulationTick` and runs
    `ConnectivitySystem -> JobAssignmentSystem -> MovementSystem -> WorkExecutionSystem`
    in order every tick.
-3. Right-click -> `DesignationInputController` (currently non-compiling, Task 14)
-   -> `SimulationRoot.TryDesignateMine`/`TryDesignateChop` -> `JobFactory.TryCreateJob`.
+3. Right-click -> `DesignationInputController` -> `SimulationRoot.TryDesignateMine`/
+   `TryDesignateChop` -> `JobFactory.TryCreateJob`.
 4. `JobAssignmentSystem` ranks unclaimed jobs per idle pawn by flow-field
    integration cost (generating/reusing fields via `FlowFieldService` per
    candidate); `MovementSystem` steps assigned pawns along their field;
@@ -135,8 +140,8 @@ deferral of their deletion to Task 12.
 5. `SimulationRoot.LateUpdate` drains `PendingResourceSpawn` entities into
    `OnResourceItemSpawned` and syncs pawn views — outside the simulation tick
    hot path, same as before the migration.
-6. `GridView` (not yet migrated) still expects to read `WorldGrid.Revision` from
-   `SimulationRoot.Grid`, which no longer exists — this link is broken until Task 12.
+6. `GridView.Update` compares its cached revision against `GridRevision` on
+   `root.GridEntity` each frame and repaints only when it has advanced.
 
 ## Art provenance and import
 
@@ -146,19 +151,23 @@ deferral of their deletion to Task 12.
 
 ## Validation and limits
 
-No live Unity Editor was available in this session (or reachable from this
-cloud session generally) to run EditMode tests or confirm actual Burst
-compilation. Tasks 1-6 were previously verified locally (41/41 EditMode tests
-passing per the committed `test-results.xml`) before being pushed without
-Tasks 4-6's required file deletions, which this pass corrected. Tasks 8-11's
-new code was checked only by static means: duplicate-symbol grep across
-`Assets/Scripts`, asmdef reference/package check, and a cross-file grep for
-lingering references to deleted types (confirmed clean outside the
-known-pending `GridView.cs`/`PawnView.cs`/`DesignationInputController.cs`).
-**The project is not currently known to compile in the Unity Editor** — Tasks
-12-14 (Presentation rewrite) are required first, and even once it compiles,
-someone with Editor access should run the EditMode suite before trusting any
-of this beyond static review.
+No live Unity Editor was available in any session that did this migration
+work (Tasks 7-14, plus the Tasks 4-6 cleanup) to run EditMode tests or
+confirm actual Burst compilation. Tasks 1-6 were previously verified locally
+(41/41 EditMode tests passing per the committed `test-results.xml`) before
+being pushed without Tasks 4-6's required file deletions, which a later pass
+corrected. Everything from that cleanup through Task 14 was checked only by
+static means: duplicate-symbol grep across `Assets/Scripts`, asmdef
+reference/package checks, and a project-wide grep for lingering references
+to every deleted type (`WorldGrid`, `Cell`, `Pawn`, `PawnManager`, `Job`,
+`JobBoard`, `GridAStar`, `IPathfinder`, `TickManager`) — all confirmed clean.
+**None of this is known to actually compile in the Unity Editor or pass
+Burst compilation.** Someone with Editor access must run
+`unity test ... --mode EditMode` and check Play mode (per the plan's Task 15
+manual-verification checklist: three colonists spawn, mine/chop jobs
+complete and mutate the grid, water is rejected, duplicate designations are
+rejected) before trusting any of this beyond "the source is internally
+consistent by inspection."
 
 Known carried-over limitations (from the pre-migration plain-C# implementation,
 not yet revisited): tick staggering affects movement/work as well as job
