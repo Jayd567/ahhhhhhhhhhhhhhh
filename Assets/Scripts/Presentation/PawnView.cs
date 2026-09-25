@@ -1,3 +1,6 @@
+using Unity.Collections;
+using Unity.Entities;
+using Unity.Transforms;
 using UnityEngine;
 using UnityEngine.Rendering;
 using ColonySim.Data;
@@ -11,11 +14,13 @@ namespace ColonySim.Presentation
         private SimulationRoot _root;
         private int _pawnId;
         private SortingGroup _sorting;
+        private EntityQuery _pawnQuery;
 
         public void Initialize(SimulationRoot root, int pawnId, PawnTemplateSO template)
         {
             _root = root;
             _pawnId = pawnId;
+            _pawnQuery = root.World.EntityManager.CreateEntityQuery(typeof(PawnId), typeof(LocalTransform));
             _sorting = gameObject.AddComponent<SortingGroup>();
             transform.localScale = Vector3.one * template.VisualScale;
             PawnPalette palette = template.Palettes.Length > 0
@@ -41,15 +46,17 @@ namespace ColonySim.Presentation
 
         public bool SyncFromSimulation()
         {
-            Pawn pawn = _root.PawnManager.GetPawn(_pawnId);
-            if (pawn == null)
-            {
-                Destroy(gameObject);
-                return false;
-            }
+            EntityManager em = _root.World.EntityManager;
+            using NativeArray<Entity> entities = _pawnQuery.ToEntityArray(Allocator.Temp);
+            using NativeArray<PawnId> ids = _pawnQuery.ToComponentDataArray<PawnId>(Allocator.Temp);
+            int found = -1;
+            for (int i = 0; i < ids.Length; i++) if (ids[i].Value == _pawnId) { found = i; break; }
+            if (found < 0) { Destroy(gameObject); return false; }
+
+            LocalTransform pawnTransform = em.GetComponentData<LocalTransform>(entities[found]);
             Vector3 position = transform.position;
-            position.x = pawn.PositionX + 0.5f;
-            position.y = pawn.PositionY + 0.5f;
+            position.x = pawnTransform.Position.x + 0.5f;
+            position.y = pawnTransform.Position.y + 0.5f;
             position.z = -1f;
             transform.position = position;
             _sorting.sortingOrder = 1000 - Mathf.RoundToInt(position.y * 10f);

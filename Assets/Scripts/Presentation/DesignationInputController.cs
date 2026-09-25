@@ -1,5 +1,7 @@
+using Unity.Entities;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using ColonySim.Simulation.Grid;
 
 namespace ColonySim.Presentation
 {
@@ -11,15 +13,19 @@ namespace ColonySim.Presentation
         private void Update()
         {
             if (Mouse.current == null || !Mouse.current.rightButton.wasPressedThisFrame) return;
+            if (root == null || root.World == null) return;
 
             Vector2 screenPos = Mouse.current.position.ReadValue();
             Vector3 worldPos = targetCamera.ScreenToWorldPoint(new Vector3(screenPos.x, screenPos.y, 0f));
 
             int x = Mathf.FloorToInt(worldPos.x);
             int y = Mathf.FloorToInt(worldPos.y);
-            if (x < 0 || x >= root.Grid.Width || y < 0 || y >= root.Grid.Height) return;
 
-            int cellIndex = root.Grid.IndexOf(x, y);
+            EntityManager em = root.World.EntityManager;
+            GridDimensions dims = em.GetComponentData<GridDimensions>(root.GridEntity);
+            if (x < 0 || x >= dims.Width || y < 0 || y >= dims.Height) return;
+
+            int cellIndex = y * dims.Width + x;
             if (!root.TryDesignateMine(cellIndex))
                 root.TryDesignateChop(cellIndex);
         }
