@@ -3,8 +3,14 @@
     "rootNamespace": "ColonySim.Simulation.Tests",
     "references": [
         "Simulation",
+        "Data",
         "UnityEngine.TestRunner",
-        "UnityEditor.TestRunner"
+        "UnityEditor.TestRunner",
+        "Unity.Entities",
+        "Unity.Burst",
+        "Unity.Collections",
+        "Unity.Mathematics",
+        "Unity.Transforms"
     ],
     "includePlatforms": ["Editor"],
     "excludePlatforms": [],

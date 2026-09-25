@@ -47,10 +47,13 @@ namespace ColonySim.Presentation
         public void GenerateWorld()
         {
             if (worldSettings == null) throw new System.InvalidOperationException("Assign World Settings first.");
-            GeneratedWorld generated = WorldGenerator.Generate(worldSettings.CreateSettings());
-            Grid = generated.Grid;
-            Heightmap = generated.Heightmap;
-            SpawnCell = generated.SpawnCell;
+            // The plain-C# WorldGenerator/GeneratedWorld were deleted in Task 4 of the ECS
+            // migration (world generation now runs as Burst jobs via EcsWorldGenerator, which
+            // writes into ECS grid components rather than the legacy WorldGrid used here).
+            // SimulationRoot's own migration to the ECS grid/pawn/job pipeline is Task 11 of
+            // the plan; until then this MonoBehaviour path is intentionally not wired up.
+            throw new System.NotSupportedException(
+                "SimulationRoot.GenerateWorld is pending migration to EcsWorldGenerator (ECS migration Task 11).");
         }
 
         private void Awake()

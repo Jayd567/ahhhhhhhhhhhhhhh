@@ -1,0 +1,300 @@
+<?xml version="1.0" encoding="utf-8"?>
+<test-run id="2" testcasecount="41" result="Passed" total="41" passed="41" failed="0" inconclusive="0" skipped="0" asserts="0" engine-version="3.5.0.0" clr-version="4.0.30319.42000" start-time="2026-09-24 23:51:07Z" end-time="2026-09-24 23:51:07Z" duration="0.5849287">
+  <test-suite type="TestSuite" id="1000" name="Rimworld-esc game" fullname="Rimworld-esc game" runstate="Runnable" testcasecount="41" result="Passed" start-time="2026-09-24 23:51:07Z" end-time="2026-09-24 23:51:07Z" duration="0.584929" total="41" passed="41" failed="0" inconclusive="0" skipped="0" asserts="0">
+    <properties>
+      <property name="platform" value="EditMode" />
+    </properties>
+    <test-suite type="Assembly" id="1051" name="SimulationTests.dll" fullname="C:/Users/jaybe/on the rim/Rimworld-esc game/.worktrees/ecs-dots-migration/Library/ScriptAssemblies/SimulationTests.dll" runstate="Runnable" testcasecount="41" result="Passed" start-time="2026-09-24 23:51:07Z" end-time="2026-09-24 23:51:07Z" duration="0.578971" total="41" passed="41" failed="0" inconclusive="0" skipped="0" asserts="0">
+      <properties>
+        <property name="_PID" value="46840" />
+        <property name="_APPDOMAIN" value="Unity Child Domain" />
+        <property name="platform" value="EditMode" />
+        <property name="EditorOnly" value="True" />
+      </properties>
+      <test-suite type="TestSuite" id="1052" name="ColonySim" fullname="ColonySim" runstate="Runnable" testcasecount="41" result="Passed" start-time="2026-09-24 23:51:07Z" end-time="2026-09-24 23:51:07Z" duration="0.578243" total="41" passed="41" failed="0" inconclusive="0" skipped="0" asserts="0">
+        <properties />
+        <test-suite type="TestSuite" id="1053" name="Simulation" fullname="ColonySim.Simulation" runstate="Runnable" testcasecount="41" result="Passed" start-time="2026-09-24 23:51:07Z" end-time="2026-09-24 23:51:07Z" duration="0.577621" total="41" passed="41" failed="0" inconclusive="0" skipped="0" asserts="0">
+          <properties />
+          <test-suite type="TestSuite" id="1054" name="Tests" fullname="ColonySim.Simulation.Tests" runstate="Runnable" testcasecount="41" result="Passed" start-time="2026-09-24 23:51:07Z" end-time="2026-09-24 23:51:07Z" duration="0.576827" total="41" passed="41" failed="0" inconclusive="0" skipped="0" asserts="0">
+            <properties />
+            <test-suite type="TestFixture" id="1001" name="ConnectivitySystemTests" fullname="ColonySim.Simulation.Tests.ConnectivitySystemTests" classname="ColonySim.Simulation.Tests.ConnectivitySystemTests" runstate="Runnable" testcasecount="2" result="Passed" start-time="2026-09-24 23:51:07Z" end-time="2026-09-24 23:51:07Z" duration="0.174125" total="2" passed="2" failed="0" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <test-case id="1003" name="FiveCellRow_WallAtIndexTwo_SplitsIntoTwoRegions" fullname="ColonySim.Simulation.Tests.ConnectivitySystemTests.FiveCellRow_WallAtIndexTwo_SplitsIntoTwoRegions" methodname="FiveCellRow_WallAtIndexTwo_SplitsIntoTwoRegions" classname="ColonySim.Simulation.Tests.ConnectivitySystemTests" runstate="Runnable" seed="2005694754" result="Passed" start-time="2026-09-24 23:51:07Z" end-time="2026-09-24 23:51:07Z" duration="0.161822" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1002" name="TwoDisconnectedWalkableRegions_GetDifferentRegionIds" fullname="ColonySim.Simulation.Tests.ConnectivitySystemTests.TwoDisconnectedWalkableRegions_GetDifferentRegionIds" methodname="TwoDisconnectedWalkableRegions_GetDifferentRegionIds" classname="ColonySim.Simulation.Tests.ConnectivitySystemTests" runstate="Runnable" seed="906096570" result="Passed" start-time="2026-09-24 23:51:07Z" end-time="2026-09-24 23:51:07Z" duration="0.001269" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+            </test-suite>
+            <test-suite type="TestFixture" id="1004" name="EcsWorldGeneratorTests" fullname="ColonySim.Simulation.Tests.EcsWorldGeneratorTests" classname="ColonySim.Simulation.Tests.EcsWorldGeneratorTests" runstate="Runnable" testcasecount="3" result="Passed" start-time="2026-09-24 23:51:07Z" end-time="2026-09-24 23:51:07Z" duration="0.356858" total="3" passed="3" failed="0" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <test-case id="1005" name="Generate_SameSeed_IsDeterministic" fullname="ColonySim.Simulation.Tests.EcsWorldGeneratorTests.Generate_SameSeed_IsDeterministic" methodname="Generate_SameSeed_IsDeterministic" classname="ColonySim.Simulation.Tests.EcsWorldGeneratorTests" runstate="Runnable" seed="638827812" result="Passed" start-time="2026-09-24 23:51:07Z" end-time="2026-09-24 23:51:07Z" duration="0.275060" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1007" name="Generate_SpawnCellIsWalkableAndInLargestRegion" fullname="ColonySim.Simulation.Tests.EcsWorldGeneratorTests.Generate_SpawnCellIsWalkableAndInLargestRegion" methodname="Generate_SpawnCellIsWalkableAndInLargestRegion" classname="ColonySim.Simulation.Tests.EcsWorldGeneratorTests" runstate="Runnable" seed="1101104945" result="Passed" start-time="2026-09-24 23:51:07Z" end-time="2026-09-24 23:51:07Z" duration="0.022216" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1006" name="Generate_WaterCellsAreNeverWalkable" fullname="ColonySim.Simulation.Tests.EcsWorldGeneratorTests.Generate_WaterCellsAreNeverWalkable" methodname="Generate_WaterCellsAreNeverWalkable" classname="ColonySim.Simulation.Tests.EcsWorldGeneratorTests" runstate="Runnable" seed="1594133432" result="Passed" start-time="2026-09-24 23:51:07Z" end-time="2026-09-24 23:51:07Z" duration="0.057762" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+            </test-suite>
+            <test-suite type="TestFixture" id="1008" name="GridAStarTests" fullname="ColonySim.Simulation.Tests.GridAStarTests" classname="ColonySim.Simulation.Tests.GridAStarTests" runstate="Runnable" testcasecount="4" result="Passed" start-time="2026-09-24 23:51:07Z" end-time="2026-09-24 23:51:07Z" duration="0.005040" total="4" passed="4" failed="0" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <test-case id="1010" name="TryFindPath_AroundObstacle_FindsDetour" fullname="ColonySim.Simulation.Tests.GridAStarTests.TryFindPath_AroundObstacle_FindsDetour" methodname="TryFindPath_AroundObstacle_FindsDetour" classname="ColonySim.Simulation.Tests.GridAStarTests" runstate="Runnable" seed="1755927370" result="Passed" start-time="2026-09-24 23:51:07Z" end-time="2026-09-24 23:51:07Z" duration="0.002514" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1012" name="TryFindPath_StartEqualsGoal_ReturnsSingleCellPath" fullname="ColonySim.Simulation.Tests.GridAStarTests.TryFindPath_StartEqualsGoal_ReturnsSingleCellPath" methodname="TryFindPath_StartEqualsGoal_ReturnsSingleCellPath" classname="ColonySim.Simulation.Tests.GridAStarTests" runstate="Runnable" seed="1183780695" result="Passed" start-time="2026-09-24 23:51:07Z" end-time="2026-09-24 23:51:07Z" duration="0.000226" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1009" name="TryFindPath_StraightLine_FindsShortestPath" fullname="ColonySim.Simulation.Tests.GridAStarTests.TryFindPath_StraightLine_FindsShortestPath" methodname="TryFindPath_StraightLine_FindsShortestPath" classname="ColonySim.Simulation.Tests.GridAStarTests" runstate="Runnable" seed="1227991802" result="Passed" start-time="2026-09-24 23:51:07Z" end-time="2026-09-24 23:51:07Z" duration="0.000268" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1011" name="TryFindPath_WalledOff_ReturnsFalseAndClearsPath" fullname="ColonySim.Simulation.Tests.GridAStarTests.TryFindPath_WalledOff_ReturnsFalseAndClearsPath" methodname="TryFindPath_WalledOff_ReturnsFalseAndClearsPath" classname="ColonySim.Simulation.Tests.GridAStarTests" runstate="Runnable" seed="1006789396" result="Passed" start-time="2026-09-24 23:51:07Z" end-time="2026-09-24 23:51:07Z" duration="0.000208" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+            </test-suite>
+            <test-suite type="TestFixture" id="1013" name="GridBootstrapTests" fullname="ColonySim.Simulation.Tests.GridBootstrapTests" classname="ColonySim.Simulation.Tests.GridBootstrapTests" runstate="Runnable" testcasecount="1" result="Passed" start-time="2026-09-24 23:51:07Z" end-time="2026-09-24 23:51:07Z" duration="0.001884" total="1" passed="1" failed="0" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <test-case id="1014" name="CreateGrid_SetsDimensionsAndSizesBuffer" fullname="ColonySim.Simulation.Tests.GridBootstrapTests.CreateGrid_SetsDimensionsAndSizesBuffer" methodname="CreateGrid_SetsDimensionsAndSizesBuffer" classname="ColonySim.Simulation.Tests.GridBootstrapTests" runstate="Runnable" seed="365579346" result="Passed" start-time="2026-09-24 23:51:07Z" end-time="2026-09-24 23:51:07Z" duration="0.001263" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+            </test-suite>
+            <test-suite type="TestFixture" id="1015" name="JobBoardTests" fullname="ColonySim.Simulation.Tests.JobBoardTests" classname="ColonySim.Simulation.Tests.JobBoardTests" runstate="Runnable" testcasecount="5" result="Passed" start-time="2026-09-24 23:51:07Z" end-time="2026-09-24 23:51:07Z" duration="0.004519" total="5" passed="5" failed="0" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <test-case id="1016" name="TryAddJob_DuplicateTarget_IsRejected" fullname="ColonySim.Simulation.Tests.JobBoardTests.TryAddJob_DuplicateTarget_IsRejected" methodname="TryAddJob_DuplicateTarget_IsRejected" classname="ColonySim.Simulation.Tests.JobBoardTests" runstate="Runnable" seed="2106255894" result="Passed" start-time="2026-09-24 23:51:07Z" end-time="2026-09-24 23:51:07Z" duration="0.001461" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1020" name="TryClaimJobFor_NoOpenJobs_ReturnsNull" fullname="ColonySim.Simulation.Tests.JobBoardTests.TryClaimJobFor_NoOpenJobs_ReturnsNull" methodname="TryClaimJobFor_NoOpenJobs_ReturnsNull" classname="ColonySim.Simulation.Tests.JobBoardTests" runstate="Runnable" seed="669397371" result="Passed" start-time="2026-09-24 23:51:07Z" end-time="2026-09-24 23:51:07Z" duration="0.000588" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1018" name="TryClaimJobFor_PicksNearestReachableJob" fullname="ColonySim.Simulation.Tests.JobBoardTests.TryClaimJobFor_PicksNearestReachableJob" methodname="TryClaimJobFor_PicksNearestReachableJob" classname="ColonySim.Simulation.Tests.JobBoardTests" runstate="Runnable" seed="978769359" result="Passed" start-time="2026-09-24 23:51:07Z" end-time="2026-09-24 23:51:07Z" duration="0.000331" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1019" name="TryClaimJobFor_SecondCallSameTick_DoesNotClaimSameJobTwice" fullname="ColonySim.Simulation.Tests.JobBoardTests.TryClaimJobFor_SecondCallSameTick_DoesNotClaimSameJobTwice" methodname="TryClaimJobFor_SecondCallSameTick_DoesNotClaimSameJobTwice" classname="ColonySim.Simulation.Tests.JobBoardTests" runstate="Runnable" seed="19443343" result="Passed" start-time="2026-09-24 23:51:07Z" end-time="2026-09-24 23:51:07Z" duration="0.000174" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1017" name="TryClaimJobFor_UnreachableJob_ReturnsNull" fullname="ColonySim.Simulation.Tests.JobBoardTests.TryClaimJobFor_UnreachableJob_ReturnsNull" methodname="TryClaimJobFor_UnreachableJob_ReturnsNull" classname="ColonySim.Simulation.Tests.JobBoardTests" runstate="Runnable" seed="1667937162" result="Passed" start-time="2026-09-24 23:51:07Z" end-time="2026-09-24 23:51:07Z" duration="0.000237" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+            </test-suite>
+            <test-suite type="TestFixture" id="1021" name="PawnManagerTests" fullname="ColonySim.Simulation.Tests.PawnManagerTests" classname="ColonySim.Simulation.Tests.PawnManagerTests" runstate="Runnable" testcasecount="5" result="Passed" start-time="2026-09-24 23:51:07Z" end-time="2026-09-24 23:51:07Z" duration="0.005247" total="5" passed="5" failed="0" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <test-case id="1023" name="GetPawn_UnknownId_ReturnsNull" fullname="ColonySim.Simulation.Tests.PawnManagerTests.GetPawn_UnknownId_ReturnsNull" methodname="GetPawn_UnknownId_ReturnsNull" classname="ColonySim.Simulation.Tests.PawnManagerTests" runstate="Runnable" seed="1550941865" result="Passed" start-time="2026-09-24 23:51:07Z" end-time="2026-09-24 23:51:07Z" duration="0.000726" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1024" name="RemovePawn_ThenGetPawn_ReturnsNull" fullname="ColonySim.Simulation.Tests.PawnManagerTests.RemovePawn_ThenGetPawn_ReturnsNull" methodname="RemovePawn_ThenGetPawn_ReturnsNull" classname="ColonySim.Simulation.Tests.PawnManagerTests" runstate="Runnable" seed="1920694300" result="Passed" start-time="2026-09-24 23:51:07Z" end-time="2026-09-24 23:51:07Z" duration="0.000938" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1022" name="SpawnPawn_ReturnsUniqueIncreasingIds" fullname="ColonySim.Simulation.Tests.PawnManagerTests.SpawnPawn_ReturnsUniqueIncreasingIds" methodname="SpawnPawn_ReturnsUniqueIncreasingIds" classname="ColonySim.Simulation.Tests.PawnManagerTests" runstate="Runnable" seed="1055289341" result="Passed" start-time="2026-09-24 23:51:07Z" end-time="2026-09-24 23:51:07Z" duration="0.000141" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1025" name="Tick_OnlyInvokesCallbackForPawnsInCurrentStaggerBucket" fullname="ColonySim.Simulation.Tests.PawnManagerTests.Tick_OnlyInvokesCallbackForPawnsInCurrentStaggerBucket" methodname="Tick_OnlyInvokesCallbackForPawnsInCurrentStaggerBucket" classname="ColonySim.Simulation.Tests.PawnManagerTests" runstate="Runnable" seed="818056195" result="Passed" start-time="2026-09-24 23:51:07Z" end-time="2026-09-24 23:51:07Z" duration="0.000632" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1026" name="Tick_ZeroPawns_DoesNotThrow" fullname="ColonySim.Simulation.Tests.PawnManagerTests.Tick_ZeroPawns_DoesNotThrow" methodname="Tick_ZeroPawns_DoesNotThrow" classname="ColonySim.Simulation.Tests.PawnManagerTests" runstate="Runnable" seed="1700222752" result="Passed" start-time="2026-09-24 23:51:07Z" end-time="2026-09-24 23:51:07Z" duration="0.000985" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+            </test-suite>
+            <test-suite type="TestFixture" id="1027" name="TerrainDefBlobTests" fullname="ColonySim.Simulation.Tests.TerrainDefBlobTests" classname="ColonySim.Simulation.Tests.TerrainDefBlobTests" runstate="Runnable" testcasecount="1" result="Passed" start-time="2026-09-24 23:51:07Z" end-time="2026-09-24 23:51:07Z" duration="0.011744" total="1" passed="1" failed="0" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <test-case id="1028" name="PopulateBaseCosts_WalkableTerrainUsesDefCost_UnwalkableIsImpassable" fullname="ColonySim.Simulation.Tests.TerrainDefBlobTests.PopulateBaseCosts_WalkableTerrainUsesDefCost_UnwalkableIsImpassable" methodname="PopulateBaseCosts_WalkableTerrainUsesDefCost_UnwalkableIsImpassable" classname="ColonySim.Simulation.Tests.TerrainDefBlobTests" runstate="Runnable" seed="802464655" result="Passed" start-time="2026-09-24 23:51:07Z" end-time="2026-09-24 23:51:07Z" duration="0.011057" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+            </test-suite>
+            <test-suite type="TestFixture" id="1029" name="TickManagerTests" fullname="ColonySim.Simulation.Tests.TickManagerTests" classname="ColonySim.Simulation.Tests.TickManagerTests" runstate="Runnable" testcasecount="4" result="Passed" start-time="2026-09-24 23:51:07Z" end-time="2026-09-24 23:51:07Z" duration="0.005751" total="4" passed="4" failed="0" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <test-case id="1031" name="Tick_IdlePawnClaimsPathsWorksAndCompletesMineJob" fullname="ColonySim.Simulation.Tests.TickManagerTests.Tick_IdlePawnClaimsPathsWorksAndCompletesMineJob" methodname="Tick_IdlePawnClaimsPathsWorksAndCompletesMineJob" classname="ColonySim.Simulation.Tests.TickManagerTests" runstate="Runnable" seed="1005920574" result="Passed" start-time="2026-09-24 23:51:07Z" end-time="2026-09-24 23:51:07Z" duration="0.002876" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1033" name="Tick_MineJobOnWallBetweenTwoRegions_PawnPathsViaItsOwnRegionNeighbor" fullname="ColonySim.Simulation.Tests.TickManagerTests.Tick_MineJobOnWallBetweenTwoRegions_PawnPathsViaItsOwnRegionNeighbor" methodname="Tick_MineJobOnWallBetweenTwoRegions_PawnPathsViaItsOwnRegionNeighbor" classname="ColonySim.Simulation.Tests.TickManagerTests" runstate="Runnable" seed="2085036621" result="Passed" start-time="2026-09-24 23:51:07Z" end-time="2026-09-24 23:51:07Z" duration="0.000424" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1032" name="Tick_PawnWorkingJobWhoseTargetAlreadyResolved_CancelsGracefullyWithoutDuplicateItem" fullname="ColonySim.Simulation.Tests.TickManagerTests.Tick_PawnWorkingJobWhoseTargetAlreadyResolved_CancelsGracefullyWithoutDuplicateItem" methodname="Tick_PawnWorkingJobWhoseTargetAlreadyResolved_CancelsGracefullyWithoutDuplicateItem" classname="ColonySim.Simulation.Tests.TickManagerTests" runstate="Runnable" seed="456613161" result="Passed" start-time="2026-09-24 23:51:07Z" end-time="2026-09-24 23:51:07Z" duration="0.000508" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1030" name="Tick_ZeroPawnsZeroJobs_DoesNotThrow" fullname="ColonySim.Simulation.Tests.TickManagerTests.Tick_ZeroPawnsZeroJobs_DoesNotThrow" methodname="Tick_ZeroPawnsZeroJobs_DoesNotThrow" classname="ColonySim.Simulation.Tests.TickManagerTests" runstate="Runnable" seed="1970678303" result="Passed" start-time="2026-09-24 23:51:07Z" end-time="2026-09-24 23:51:07Z" duration="0.000217" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+            </test-suite>
+            <test-suite type="TestFixture" id="1034" name="WorldGridTests" fullname="ColonySim.Simulation.Tests.WorldGridTests" classname="ColonySim.Simulation.Tests.WorldGridTests" runstate="Runnable" testcasecount="16" result="Passed" start-time="2026-09-24 23:51:07Z" end-time="2026-09-24 23:51:07Z" duration="0.007585" total="16" passed="16" failed="0" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <test-case id="1035" name="CellCount_EqualsWidthTimesHeight" fullname="ColonySim.Simulation.Tests.WorldGridTests.CellCount_EqualsWidthTimesHeight" methodname="CellCount_EqualsWidthTimesHeight" classname="ColonySim.Simulation.Tests.WorldGridTests" runstate="Runnable" seed="1666777275" result="Passed" start-time="2026-09-24 23:51:07Z" end-time="2026-09-24 23:51:07Z" duration="0.000218" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1043" name="Connectivity_AllWalkableGrid_SharesOneId" fullname="ColonySim.Simulation.Tests.WorldGridTests.Connectivity_AllWalkableGrid_SharesOneId" methodname="Connectivity_AllWalkableGrid_SharesOneId" classname="ColonySim.Simulation.Tests.WorldGridTests" runstate="Runnable" seed="285351807" result="Passed" start-time="2026-09-24 23:51:07Z" end-time="2026-09-24 23:51:07Z" duration="0.000265" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1045" name="Connectivity_OpeningWallMergesRegions" fullname="ColonySim.Simulation.Tests.WorldGridTests.Connectivity_OpeningWallMergesRegions" methodname="Connectivity_OpeningWallMergesRegions" classname="ColonySim.Simulation.Tests.WorldGridTests" runstate="Runnable" seed="1931030454" result="Passed" start-time="2026-09-24 23:51:07Z" end-time="2026-09-24 23:51:07Z" duration="0.000211" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1046" name="Connectivity_UnwalkableCell_HasSentinelId" fullname="ColonySim.Simulation.Tests.WorldGridTests.Connectivity_UnwalkableCell_HasSentinelId" methodname="Connectivity_UnwalkableCell_HasSentinelId" classname="ColonySim.Simulation.Tests.WorldGridTests" runstate="Runnable" seed="739295644" result="Passed" start-time="2026-09-24 23:51:07Z" end-time="2026-09-24 23:51:07Z" duration="0.000158" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1044" name="Connectivity_WallSplitsGridIntoTwoIds" fullname="ColonySim.Simulation.Tests.WorldGridTests.Connectivity_WallSplitsGridIntoTwoIds" methodname="Connectivity_WallSplitsGridIntoTwoIds" classname="ColonySim.Simulation.Tests.WorldGridTests" runstate="Runnable" seed="2040775781" result="Passed" start-time="2026-09-24 23:51:07Z" end-time="2026-09-24 23:51:07Z" duration="0.000138" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1036" name="IndexOf_IsRowMajor" fullname="ColonySim.Simulation.Tests.WorldGridTests.IndexOf_IsRowMajor" methodname="IndexOf_IsRowMajor" classname="ColonySim.Simulation.Tests.WorldGridTests" runstate="Runnable" seed="1562854497" result="Passed" start-time="2026-09-24 23:51:07Z" end-time="2026-09-24 23:51:07Z" duration="0.000156" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1041" name="NeighborMask_CornerCell_OffGridNeighborsAreNotWalkable" fullname="ColonySim.Simulation.Tests.WorldGridTests.NeighborMask_CornerCell_OffGridNeighborsAreNotWalkable" methodname="NeighborMask_CornerCell_OffGridNeighborsAreNotWalkable" classname="ColonySim.Simulation.Tests.WorldGridTests" runstate="Runnable" seed="138346090" result="Passed" start-time="2026-09-24 23:51:07Z" end-time="2026-09-24 23:51:07Z" duration="0.000311" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1040" name="NeighborMask_InteriorCell_AllWalkableByDefault" fullname="ColonySim.Simulation.Tests.WorldGridTests.NeighborMask_InteriorCell_AllWalkableByDefault" methodname="NeighborMask_InteriorCell_AllWalkableByDefault" classname="ColonySim.Simulation.Tests.WorldGridTests" runstate="Runnable" seed="102272309" result="Passed" start-time="2026-09-24 23:51:07Z" end-time="2026-09-24 23:51:07Z" duration="0.000134" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1042" name="NeighborMask_UpdatesWhenNeighborBecomesUnwalkable" fullname="ColonySim.Simulation.Tests.WorldGridTests.NeighborMask_UpdatesWhenNeighborBecomesUnwalkable" methodname="NeighborMask_UpdatesWhenNeighborBecomesUnwalkable" classname="ColonySim.Simulation.Tests.WorldGridTests" runstate="Runnable" seed="728896840" result="Passed" start-time="2026-09-24 23:51:07Z" end-time="2026-09-24 23:51:07Z" duration="0.000201" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1048" name="ResolveMineJob_AlreadyResolvedTarget_ReturnsNull" fullname="ColonySim.Simulation.Tests.WorldGridTests.ResolveMineJob_AlreadyResolvedTarget_ReturnsNull" methodname="ResolveMineJob_AlreadyResolvedTarget_ReturnsNull" classname="ColonySim.Simulation.Tests.WorldGridTests" runstate="Runnable" seed="81720010" result="Passed" start-time="2026-09-24 23:51:07Z" end-time="2026-09-24 23:51:07Z" duration="0.000125" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1047" name="ResolveMineJob_MutatesCellToFloorAndReturnsResourceItem" fullname="ColonySim.Simulation.Tests.WorldGridTests.ResolveMineJob_MutatesCellToFloorAndReturnsResourceItem" methodname="ResolveMineJob_MutatesCellToFloorAndReturnsResourceItem" classname="ColonySim.Simulation.Tests.WorldGridTests" runstate="Runnable" seed="47355029" result="Passed" start-time="2026-09-24 23:51:07Z" end-time="2026-09-24 23:51:07Z" duration="0.000293" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1049" name="ResolveTreeJob_ClearsTreeFlagAndReturnsResourceItem" fullname="ColonySim.Simulation.Tests.WorldGridTests.ResolveTreeJob_ClearsTreeFlagAndReturnsResourceItem" methodname="ResolveTreeJob_ClearsTreeFlagAndReturnsResourceItem" classname="ColonySim.Simulation.Tests.WorldGridTests" runstate="Runnable" seed="737439818" result="Passed" start-time="2026-09-24 23:51:07Z" end-time="2026-09-24 23:51:07Z" duration="0.000287" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1050" name="ResolveTreeJob_NoTreePresent_ReturnsNull" fullname="ColonySim.Simulation.Tests.WorldGridTests.ResolveTreeJob_NoTreePresent_ReturnsNull" methodname="ResolveTreeJob_NoTreePresent_ReturnsNull" classname="ColonySim.Simulation.Tests.WorldGridTests" runstate="Runnable" seed="655660870" result="Passed" start-time="2026-09-24 23:51:07Z" end-time="2026-09-24 23:51:07Z" duration="0.000143" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1039" name="SetTerrain_UpdatesWalkabilityAndTerrainId" fullname="ColonySim.Simulation.Tests.WorldGridTests.SetTerrain_UpdatesWalkabilityAndTerrainId" methodname="SetTerrain_UpdatesWalkabilityAndTerrainId" classname="ColonySim.Simulation.Tests.WorldGridTests" runstate="Runnable" seed="1478204326" result="Passed" start-time="2026-09-24 23:51:07Z" end-time="2026-09-24 23:51:07Z" duration="0.000182" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1038" name="TryGetCoordsOf_OutOfRangeIndex_ReturnsFalse" fullname="ColonySim.Simulation.Tests.WorldGridTests.TryGetCoordsOf_OutOfRangeIndex_ReturnsFalse" methodname="TryGetCoordsOf_OutOfRangeIndex_ReturnsFalse" classname="ColonySim.Simulation.Tests.WorldGridTests" runstate="Runnable" seed="77940375" result="Passed" start-time="2026-09-24 23:51:07Z" end-time="2026-09-24 23:51:07Z" duration="0.000101" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1037" name="TryGetCoordsOf_RoundTripsWithIndexOf" fullname="ColonySim.Simulation.Tests.WorldGridTests.TryGetCoordsOf_RoundTripsWithIndexOf" methodname="TryGetCoordsOf_RoundTripsWithIndexOf" classname="ColonySim.Simulation.Tests.WorldGridTests" runstate="Runnable" seed="1915485991" result="Passed" start-time="2026-09-24 23:51:07Z" end-time="2026-09-24 23:51:07Z" duration="0.000142" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <output><![CDATA[Saving results to: C:/Users/jaybe/AppData/LocalLow/DefaultCompany/Rimworld-esc game\TestResults.xml
+]]></output>
+              </test-case>
+            </test-suite>
+          </test-suite>
+        </test-suite>
+      </test-suite>
+    </test-suite>
+  </test-suite>
+</test-run>

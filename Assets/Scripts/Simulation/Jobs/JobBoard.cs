@@ -6,40 +6,24 @@ namespace ColonySim.Simulation.Jobs
 {
     public class JobBoard
     {
-        private readonly List<Job> _openJobs = new List<Job>();
-        private readonly Dictionary<int, Job> _jobsById = new Dictionary<int, Job>();
-        private int _nextJobId;
+        // Interim throwaway holder for the fields the old plain Job class held, kept only so
+        // TryClaimJobFor/ReleaseJob/CompleteJob keep compiling until Task 8 deletes this whole file
+        // and replaces job matching with ECS systems.
+        public class LegacyJob
+        {
+            public int Id;
+            public JobType Type;
+            public int TargetCellIndex;
+            public int ClaimedByPawnId = -1;
+            public int WorkTicksRemaining;
+        }
+
+        private readonly List<LegacyJob> _openJobs = new List<LegacyJob>();
+        private readonly Dictionary<int, LegacyJob> _jobsById = new Dictionary<int, LegacyJob>();
 
         public int OpenJobCount => _openJobs.Count;
 
-        public bool TryAddJob(WorldGrid grid, JobType type, int targetCellIndex, out int jobId)
-        {
-            if ((uint)targetCellIndex >= (uint)grid.CellCount || (!grid.GetCell(targetCellIndex).IsWalkable && !grid.GetCell(targetCellIndex).HasRock)) { jobId = -1; return false; }
-            for (int i = 0; i < _openJobs.Count; i++)
-            {
-                if (_openJobs[i].TargetCellIndex == targetCellIndex)
-                {
-                    jobId = -1;
-                    return false;
-                }
-            }
-            foreach (Job job in _jobsById.Values)
-            {
-                if (job.ClaimedByPawnId >= 0 && job.TargetCellIndex == targetCellIndex)
-                {
-                    jobId = -1;
-                    return false;
-                }
-            }
-
-            var newJob = new Job { Id = _nextJobId++, Type = type, TargetCellIndex = targetCellIndex };
-            _openJobs.Add(newJob);
-            _jobsById[newJob.Id] = newJob;
-            jobId = newJob.Id;
-            return true;
-        }
-
-        public Job TryClaimJobFor(WorldGrid grid, Pawn pawn)
+        public LegacyJob TryClaimJobFor(WorldGrid grid, Pawn pawn)
         {
             if (_openJobs.Count == 0) return null;
 
@@ -52,7 +36,7 @@ namespace ColonySim.Simulation.Jobs
 
             for (int i = 0; i < _openJobs.Count; i++)
             {
-                Job job = _openJobs[i];
+                LegacyJob job = _openJobs[i];
                 if (!IsReachable(grid, job.TargetCellIndex, pawnConnectivityId)) continue;
 
                 grid.TryGetCoordsOf(job.TargetCellIndex, out int tx, out int ty);
@@ -66,7 +50,7 @@ namespace ColonySim.Simulation.Jobs
 
             if (bestListIndex < 0) return null;
 
-            Job winner = _openJobs[bestListIndex];
+            LegacyJob winner = _openJobs[bestListIndex];
             _openJobs.RemoveAt(bestListIndex);
             winner.ClaimedByPawnId = pawn.Id;
             return winner;
@@ -91,7 +75,7 @@ namespace ColonySim.Simulation.Jobs
 
         public void ReleaseJob(int jobId)
         {
-            if (!_jobsById.TryGetValue(jobId, out Job job)) return;
+            if (!_jobsById.TryGetValue(jobId, out LegacyJob job)) return;
             job.ClaimedByPawnId = -1;
             if (!_openJobs.Contains(job))
                 _openJobs.Add(job);
@@ -99,7 +83,7 @@ namespace ColonySim.Simulation.Jobs
 
         public void CompleteJob(int jobId)
         {
-            if (_jobsById.TryGetValue(jobId, out Job job))
+            if (_jobsById.TryGetValue(jobId, out LegacyJob job))
             {
                 _openJobs.Remove(job);
                 _jobsById.Remove(jobId);

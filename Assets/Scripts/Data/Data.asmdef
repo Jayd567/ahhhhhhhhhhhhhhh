@@ -1,10 +1,10 @@
 {
     "name": "Data",
     "rootNamespace": "ColonySim.Data",
-    "references": ["Simulation"],
+    "references": ["Simulation", "Unity.Entities", "Unity.Collections"],
     "includePlatforms": [],
     "excludePlatforms": [],
-    "allowUnsafeCode": false,
+    "allowUnsafeCode": true,
     "overrideReferences": false,
     "precompiledReferences": [],
     "autoReferenced": true,

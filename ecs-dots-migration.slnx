@@ -1,0 +1,7 @@
+﻿<Solution>
+  <Project Path="Simulation.csproj" />
+  <Project Path="SimulationTests.csproj" />
+  <Project Path="WorldGeneration.Editor.csproj" />
+  <Project Path="Presentation.csproj" />
+  <Project Path="Data.csproj" />
+</Solution>

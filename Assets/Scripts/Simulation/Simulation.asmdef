@@ -1,10 +1,10 @@
 {
     "name": "Simulation",
     "rootNamespace": "ColonySim.Simulation",
-    "references": [],
+    "references": ["Unity.Entities", "Unity.Burst", "Unity.Collections", "Unity.Mathematics", "Unity.Transforms"],
     "includePlatforms": [],
     "excludePlatforms": [],
-    "allowUnsafeCode": false,
+    "allowUnsafeCode": true,
     "overrideReferences": false,
     "precompiledReferences": [],
     "autoReferenced": true,
